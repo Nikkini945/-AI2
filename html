@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PvP Arena</title>
+<style>
+body {
+  margin: 0;
+  background: #111;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+canvas {
+  background: #222;
+  display: block;
+  margin: 20px auto;
+  border: 2px solid white;
+}
+#info {
+  margin-top: 10px;
+}
+</style>
+</head>
+<body>
+<h1>PvP Arena</h1>
+<canvas id="game" width="800" height="500"></canvas>
+<div id="info">
+<p>Player1: WASD + F（攻撃）</p>
+<p>Player2: 矢印キー + /（攻撃）</p>
+</div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const keys = {};
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+function createPlayer(x, y, color, controls) {
+  return {
+    x, y,
+    w: 40,
+    h: 40,
+    color,
+    speed: 4,
+    hp: 100,
+    attackCooldown: 0,
+    controls
+  };
+}
+
+const p1 = createPlayer(100, 200, "cyan", {
+  up: "w", down: "s", left: "a", right: "d", attack: "f"
+});
+
+const p2 = createPlayer(660, 200, "orange", {
+  up: "ArrowUp", down: "ArrowDown", left: "ArrowLeft", right: "ArrowRight", attack: "/"
+});
+
+function movePlayer(p) {
+  if (keys[p.controls.up]) p.y -= p.speed;
+  if (keys[p.controls.down]) p.y += p.speed;
+  if (keys[p.controls.left]) p.x -= p.speed;
+  if (keys[p.controls.right]) p.x += p.speed;
+
+  p.x = Math.max(0, Math.min(canvas.width - p.w, p.x));
+  p.y = Math.max(0, Math.min(canvas.height - p.h, p.y));
+</html>
