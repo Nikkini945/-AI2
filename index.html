@@ -1,93 +1,105 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>意味不明アドベンチャー</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      background: #111;
-      color: #fff;
-    }
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    #game {
-      margin-top: 50px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>見てるの、誰？</title>
+<style>
+body { margin:0; background:black; color:white; font-family:sans-serif; text-align:center; }
+#game { padding:40px; }
+button { margin:10px; padding:10px 20px; font-size:16px; }
+.fade { animation: fadein 1s; }
+@keyframes fadein { from {opacity:0;} to {opacity:1;} }
+.glitch { animation: glitch 0.2s infinite; }
+@keyframes glitch {
+  0% {transform: translate(0,0);} 
+  25% {transform: translate(2px,-2px);} 
+  50% {transform: translate(-2px,2px);} 
+  75% {transform: translate(2px,2px);} 
+  100% {transform: translate(0,0);} }
+</style>
 </head>
 <body>
-  <h1>意味不明アドベンチャー</h1>
-  <div id="game">
-    <p id="text">あなたは突然、謎の部屋にいる。</p>
-    <div id="choices"></div>
-  </div>
+<div id="game" class="fade">
+  <p id="text">……。</p>
+  <div id="choices"></div>
+</div>
 
-  <script>
-    const text = document.getElementById("text");
-    const choices = document.getElementById("choices");
+<script>
+const text = document.getElementById("text");
+const choices = document.getElementById("choices");
 
-    function showChoices(options) {
-      choices.innerHTML = "";
-      options.forEach(option => {
-        const btn = document.createElement("button");
-        btn.innerText = option.text;
-        btn.onclick = option.action;
-        choices.appendChild(btn);
-      });
-    }
+function setText(t){ text.innerText = t; }
+function setChoices(arr){
+  choices.innerHTML = "";
+  arr.forEach(c=>{
+    const b=document.createElement("button");
+    b.innerText=c.text;
+    b.onclick=c.action;
+    choices.appendChild(b);
+  });
+}
 
-    function start() {
-      text.innerText = "目の前にバナナとドアがある。";
-      showChoices([
-        { text: "バナナを食べる", action: banana },
-        { text: "ドアを開ける", action: door }
-      ]);
-    }
+function start(){
+  setText("目が覚めた。知らない部屋だ。\n…見られてる気がする。");
+  setChoices([
+    {text:"テレビを見る", action:tv},
+    {text:"無視する", action:ignore},
+    {text:"踊る", action:dance}
+  ]);
+}
 
-    function banana() {
-      text.innerText = "バナナを食べたら急に賢くなった気がする。";
-      showChoices([
-        { text: "IQを測る", action: iq },
-        { text: "寝る", action: sleep }
-      ]);
-    }
+function tv(){
+  setText("テレビに自分が映っている…少し遅れて動く。\n今、笑ったよな？");
+  nextChaos();
+}
 
-    function door() {
-      text.innerText = "ドアの先にはまたドアがあった。";
-      showChoices([
-        { text: "さらに進む", action: loopDoor },
-        { text: "戻る", action: start }
-      ]);
-    }
+function ignore(){
+  document.body.classList.add("glitch");
+  setText("無視すんな");
+  setTimeout(()=>{ document.body.classList.remove("glitch"); nextChaos(); },500);
+}
 
-    function iq() {
-      text.innerText = "IQは3だった。バナナの食べ過ぎだ。ゲームオーバー。";
-      showChoices([
-        { text: "最初から", action: start }
-      ]);
-    }
+function dance(){
+  setText("踊った。\nいいね👍");
+  nextChaos();
+}
 
-    function sleep() {
-      text.innerText = "寝たらゲームがバグった。勝ち。";
-      showChoices([
-        { text: "もう一回", action: start }
-      ]);
-    }
+function nextChaos(){
+  setChoices([
+    {text:"見る", action:look},
+    {text:"見られる", action:watched},
+    {text:"見せる", action:show},
+    {text:"バナナ", action:banana}
+  ]);
+}
 
-    function loopDoor() {
-      text.innerText = "無限にドアが続いている...精神が崩壊した。";
-      showChoices([
-        { text: "最初から", action: start }
-      ]);
-    }
+function look(){ setText("まだ気づかない？"); nextChaos(); }
 
-    start();
-  </script>
+function watched(){
+  setText("拍手が聞こえる…盛り上がってきました");
+  nextChaos();
+}
+
+function show(){ setText("微妙"); nextChaos(); }
+
+function banana(){ setText("バナナ出現。食べると高評価"); nextChaos(); }
+
+function reveal(){
+  setText("やっと気づいた？ずっと見られてるよ\nこれは番組です");
+  setChoices([
+    {text:"受け入れる", action:endA},
+    {text:"拒否する", action:endB},
+    {text:"踊り続ける", action:endC}
+  ]);
+}
+
+setTimeout(reveal, 15000);
+
+function endA(){ setText("新シーズン決定！続くんかい"); setChoices([{text:"最初へ", action:start}]); }
+function endB(){ setText("つまらないので終了します"); setChoices([{text:"最初へ", action:start}]); }
+function endC(){ setText("視聴率爆上がり！スター誕生"); setChoices([{text:"最初へ", action:start}]); }
+
+start();
+</script>
 </body>
 </html>
