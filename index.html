@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>意味不明アドベンチャー</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #111;
+      color: #fff;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #game {
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <h1>意味不明アドベンチャー</h1>
+  <div id="game">
+    <p id="text">あなたは突然、謎の部屋にいる。</p>
+    <div id="choices"></div>
+  </div>
+
+  <script>
+    const text = document.getElementById("text");
+    const choices = document.getElementById("choices");
+
+    function showChoices(options) {
+      choices.innerHTML = "";
+      options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.innerText = option.text;
+        btn.onclick = option.action;
+        choices.appendChild(btn);
+      });
+    }
+
+    function start() {
+      text.innerText = "目の前にバナナとドアがある。";
+      showChoices([
+        { text: "バナナを食べる", action: banana },
+        { text: "ドアを開ける", action: door }
+      ]);
+    }
+
+    function banana() {
+      text.innerText = "バナナを食べたら急に賢くなった気がする。";
+      showChoices([
+        { text: "IQを測る", action: iq },
+        { text: "寝る", action: sleep }
+      ]);
+    }
+
+    function door() {
+      text.innerText = "ドアの先にはまたドアがあった。";
+      showChoices([
+        { text: "さらに進む", action: loopDoor },
+        { text: "戻る", action: start }
+      ]);
+    }
+
+    function iq() {
+      text.innerText = "IQは3だった。バナナの食べ過ぎだ。ゲームオーバー。";
+      showChoices([
+        { text: "最初から", action: start }
+      ]);
+    }
+
+    function sleep() {
+      text.innerText = "寝たらゲームがバグった。勝ち。";
+      showChoices([
+        { text: "もう一回", action: start }
+      ]);
+    }
+
+    function loopDoor() {
+      text.innerText = "無限にドアが続いている...精神が崩壊した。";
+      showChoices([
+        { text: "最初から", action: start }
+      ]);
+    }
+
+    start();
+  </script>
+</body>
+</html>
